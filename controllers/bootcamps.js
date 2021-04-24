@@ -25,7 +25,6 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
     );
   }
   res.status(200).json({ success: true, data: bootcamp });
-  next(err);
 });
 
 // @desc    Add New bootcamp
@@ -37,7 +36,6 @@ exports.createBootcamp = asyncHandler(async (req, res, next) => {
     success: true,
     data: bootcamp,
   });
-  next(err);
 });
 
 // @desc    Update bootcamp by ID
@@ -55,7 +53,6 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
     );
   }
   res.status(200).json({ success: true, data: bootcamp });
-  next(err);
 });
 
 // @desc    Delete bootcamp by ID
@@ -69,5 +66,4 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
     );
   }
   res.status(200).json({ success: true, data: {} });
-  next(err);
 });
