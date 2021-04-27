@@ -4,12 +4,12 @@ const morgon = require("morgan");
 const colors = require("colors");
 const connectDB = require("./config/db");
 
+// Load env variables
+dotenv.config({ path: "./config/config.env" });
+
 // Routes files
 const bootcamps = require("./routes/bootcamps");
 const errorHandler = require("./middleware/error");
-
-// Load env variables
-dotenv.config({ path: "./config/config.env" });
 
 // Connect To Database
 connectDB();
