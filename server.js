@@ -1,7 +1,12 @@
+// Module Imports
+const path = require('path')
 const express = require("express");
 const dotenv = require("dotenv");
 const morgon = require("morgan");
 const colors = require("colors");
+const fileupload = require('express-fileupload');
+
+// File Imports
 const connectDB = require("./config/db");
 
 // Load env variables
@@ -24,6 +29,12 @@ app.use(express.json());
 if (process.env.NODE_ENV === "development") {
   app.use(morgon("dev"));
 }
+
+// File uploading Middleware
+app.use(fileupload());
+
+// Set static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Mount routers
 app.use("/api/v1/bootcamps", bootcamps);
