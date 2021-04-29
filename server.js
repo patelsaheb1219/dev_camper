@@ -4,6 +4,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const morgon = require("morgan");
 const colors = require("colors");
+const cookieParser = require('cookie-parser')
 const fileupload = require('express-fileupload');
 
 // File Imports
@@ -26,10 +27,15 @@ const app = express();
 // Body Parser
 app.use(express.json());
 
+// Cookie Parser
+app.use(cookieParser());
+
 // Dev logging Middleware
 if (process.env.NODE_ENV === "development") {
   app.use(morgon("dev"));
 }
+
+// Const
 
 // File uploading Middleware
 app.use(fileupload());
