@@ -4,7 +4,8 @@ const Review = require("../models/Review");
 
 const {
   getReviews,
-  getReview
+  getReview,
+  addReview
 } = require("../controllers/reviews");
 
 const { protect, authorize } = require("../middleware/auth");
@@ -18,7 +19,8 @@ router
       select: 'name description'
     }),
     getReviews
-  );
+  )
+  .post(protect, authorize('user', 'admin'),addReview);
 
   router
   .route('/:id')
