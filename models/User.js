@@ -38,7 +38,7 @@ const UserSchema = new mongoose.Schema({
 
 // Encrypt Password using bcrypt
 UserSchema.pre("save", async function (next) {
-  if (!this.isModified('Password')) {
+  if (!this.isModified('password')) {
     next();
   }
   const salt = await bcrypt.genSalt(10);
