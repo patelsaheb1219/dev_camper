@@ -1,6 +1,7 @@
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const User = require("../models/User");
+const sendEmail = require("../utils/sendEmail");
 
 // @desc    Register a new User
 // @routes    POST /api/v1/auth/register
@@ -58,8 +59,8 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    data: user
-  })
+    data: user,
+  });
 });
 
 // @desc    Forgot password
@@ -69,7 +70,12 @@ exports.forgotpassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return next(new ErrorResponse(`There is no use exists with this email ${req.body.email}`, 404));
+    return next(
+      new ErrorResponse(
+        `There is no use exists with this email ${req.body.email}`,
+        404
+      )
+    );
   }
 
   // Reset token
@@ -77,10 +83,35 @@ exports.forgotpassword = asyncHandler(async (req, res, next) => {
 
   await user.save({ validateBeforeSave: false });
 
+  // Create reset url
+  const resetUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/api/v1/resetpassword/${resetToken}`;
+
+  const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: "Password Reset Token",
+      message,
+    });
+
+    res.status(200).json({ success: true, data: "Email Sent" });
+  } catch (e) {
+    console.log(e);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save({ validateBeforeSave: false });
+
+    return next(new ErrorResponse("Email could not be sent", 500));
+  }
+
   res.status(200).json({
     success: true,
-    data: user
-  })
+    data: user,
+  });
 });
 
 // Get token from model, create cookie and send response
@@ -95,8 +126,8 @@ const sendTokenResponse = async (user, statusCode, res) => {
     httpOnly: true,
   };
 
-  if (process.env.NODE_ENV === 'production') {
-    options.secure = true
+  if (process.env.NODE_ENV === "production") {
+    options.secure = true;
   }
 
   res.status(statusCode).cookie("token", token, options).json({
