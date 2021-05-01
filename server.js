@@ -6,6 +6,7 @@ const morgon = require("morgan");
 const colors = require("colors");
 const cookieParser = require('cookie-parser')
 const fileupload = require('express-fileupload');
+const mongoSanitize = require('express-mongo-sanitize');
 
 // File Imports
 const connectDB = require("./config/db");
@@ -28,6 +29,9 @@ const app = express();
 
 // Body Parser
 app.use(express.json());
+
+// To remove data, use:
+app.use(mongoSanitize());
 
 // Cookie Parser
 app.use(cookieParser());

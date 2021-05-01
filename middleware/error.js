@@ -9,13 +9,13 @@ const errorHandler = (err, req, res, next) => {
 
   // Mongoose bad object Id
   if (err.name === 'CastError') {
-    const message = `Resourse not found with id of ${err.value}`;
+    const message = `Resourse not found`;
     error = new ErrorResponse(message, 404);
   }
 
   // Mongoose duplicate key
   if (err.code === 11000) {
-    const message = `Resource with "${err.keyValue.name}" name already exists`;
+    const message = `Duplicate field value entered`;
     error = new ErrorResponse(message, 400);
   }
 
