@@ -8,11 +8,12 @@ const geocoder = require("../utils/geocoder");
 // @routes    GET /api/v1/bootcamps
 // @access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
+  console.log('req', req);
   res.status(200).json(res.advancedResults);
 });
 
 // @desc    get one bootcamp by ID
-// @routes    GET /api/v1/bootcamp/:id
+// @routes    GET /api/v1/bootcamps/:id
 // @access    Public
 exports.getBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
@@ -23,6 +24,21 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
     );
   }
   res.status(200).json({ success: true, data: bootcamp });
+});
+
+// @desc    get one bootcamp by User ID
+// @routes    GET /api/v1/bootcamps/users
+// @access    Private
+exports.getBootcampByUserId = asyncHandler(async (req, res, next) => {
+  const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
+
+  if (!publishedBootcamp) {
+    return next(
+      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  res.status(200).json({ success: true, data: publishedBootcamp });
 });
 
 // @desc    Add New bootcamp
