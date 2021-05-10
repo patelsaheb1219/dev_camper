@@ -22,7 +22,7 @@ exports.register = asyncHandler(async (req, res, next) => {
   // Create Token
   const token = user.getSignedJwtToken();
 
-  res.status(200).json({ success: true, token });
+  res.status(200).json({ success: true, token, user });
 });
 
 // @desc    Login User
@@ -50,7 +50,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Invalid credentials", 401));
   }
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, 200, res, true);
 });
 
 // @desc    Log User Out / clear cookie
@@ -205,7 +205,7 @@ exports.resetpassword = asyncHandler(async (req, res, next) => {
 });
 
 // Get token from model, create cookie and send response
-const sendTokenResponse = async (user, statusCode, res) => {
+const sendTokenResponse = async (user, statusCode, res, sendUser = false) => {
   // Create Token
   const token = user.getSignedJwtToken();
 
@@ -223,5 +223,6 @@ const sendTokenResponse = async (user, statusCode, res) => {
   res.status(statusCode).cookie("token", token, options).json({
     success: true,
     token,
+    user: sendUser ? user : {}
   });
 };
