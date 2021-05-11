@@ -10,7 +10,7 @@ const Bootcamp = require("../models/Bootcamp");
 exports.getCourses = asyncHandler(async (req, res, next) => {
 
   if (req.params.bootcampId) {
-    const courses = await Course.find({ bootcamp: req.params.bootcampId });
+    const courses = await Course.find({ bootcamp: req.params.bootcampId }).sort('-createdAt');
     res.status(200).json({
       success: true,
       count: courses.length,
