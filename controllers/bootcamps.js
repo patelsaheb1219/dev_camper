@@ -8,7 +8,6 @@ const geocoder = require("../utils/geocoder");
 // @routes    GET /api/v1/bootcamps
 // @access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  console.log('req', req);
   res.status(200).json(res.advancedResults);
 });
 
